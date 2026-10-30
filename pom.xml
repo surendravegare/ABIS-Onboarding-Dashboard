@@ -11,8 +11,8 @@
 	<groupId>com.student</groupId>
 	<artifactId>UpdatedABIS</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>UpdatedABIS</name>
-	<description>Student Management System</description>
+	<name>ABIS Onboarding Dashboard</name>
+	<description>ABIS Onboarding Dashboard - Spring Boot, Thymeleaf and MySQL</description>
 	<url/>
 	<licenses>
 		<license/>

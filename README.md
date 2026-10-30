@@ -1,6 +1,6 @@
-# ABiS Student Management System
+# ABIS Onboarding Dashboard
 
-Spring Boot 3 / Thymeleaf / MySQL application for managing students, with an admin dashboard and an audit log.
+A Java Full Stack onboarding and student management application built using Spring Boot, Thymeleaf, MySQL, and Maven. Includes admin authentication, student registration, approval workflows, and audit logging.
 
 ## Run it
 
@@ -25,7 +25,7 @@ An old plain-text password is accepted once and is re-saved as a hash automatica
 - Every POST form carries a per-session token (`_csrf`); requests without it get 403.
 - Deleting a student is POST-only.
 - Login is limited to 5 wrong attempts per username (20 per address) per 15 minutes; public registration to 10 per address per hour. Counters are in memory and reset on restart.
-- Photos: only JPG/PNG/GIF/WEBP (checked by file content), max 5 MB, visible to logged-in admins only.
+- Photos: only JPG/PNG/GIF/WEBP (checked by file content), max 1 MB, visible to logged-in admins only.
 - Student data is validated on the server (`StudentValidator`), including duplicate email/phone.
 
 ## Tests

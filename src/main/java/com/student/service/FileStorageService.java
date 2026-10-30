@@ -17,9 +17,9 @@ import com.student.exception.UserFacingException;
 @Service
 public class FileStorageService {
 
-	// Profile photos may not be larger than 50 KB
-	public static final long MAX_PHOTO_BYTES = 50 * 1024;
-
+	// Profile photos may not be larger than 1 MB
+	public static final long MAX_PHOTO_BYTES = 1L * 1024 * 1024;
+	
 	@Value("${app.upload.dir:uploads/photos}")
 	private String uploadDir;
 
@@ -36,7 +36,7 @@ public class FileStorageService {
 		}
 
 		if (file.getSize() > MAX_PHOTO_BYTES) {
-			throw new UserFacingException("Profile photo must be 50 KB or smaller (yours is "
+			throw new UserFacingException("Profile photo must be 1 MB or smaller (yours is "
 					+ (file.getSize() + 1023) / 1024 + " KB).");
 		}
 
