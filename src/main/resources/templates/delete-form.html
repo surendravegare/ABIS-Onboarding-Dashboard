@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Delete form</title>
+</head>
+<body>
+
+<!-- Hidden POST form used by every "Delete" link (see js/delete-student.js).
+     Use on a page with: <div th:replace="~{delete-form :: deleteForm}"></div>
+     and give each Delete link: href="#" data-id="..." onclick="return deleteStudent(this)" -->
+<th:block th:fragment="deleteForm">
+    <form id="deleteForm" th:action="@{/delete}" method="post" style="display:none">
+        <input type="hidden" name="_csrf" th:value="${session.csrfToken}">
+        <input type="hidden" name="id" value="">
+    </form>
+    <script th:src="@{/js/delete-student.js}"></script>
+</th:block>
+
+</body>
+</html>

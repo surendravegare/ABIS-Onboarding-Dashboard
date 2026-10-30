@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pending Registrations · ABiS Student Management System</title>
+<link rel="icon" type="images/png" th:href="@{/images/ABiS.png}">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<style>
+  .topbar__links{display:flex;align-items:center;flex-wrap:wrap;gap:8px 18px}
+  .topbar__link{color:#1e3a8a;font-weight:600;text-decoration:none;font-size:15px;white-space:nowrap}
+  .hero h1{font-size:28px;margin:0 0 6px}
+  main.pending-main{padding:32px 20px 60px}
+  .ptable{width:100%;border-collapse:collapse;min-width:900px}
+  .ptable th{font-size:11px;text-transform:uppercase;color:var(--muted);padding:12px 16px;border-bottom:1px solid var(--border);text-align:left}
+  .ptable td{padding:12px 16px;border-bottom:1px solid #f1f2f6;font-size:13.5px;vertical-align:middle}
+  .btn{font:inherit;font-weight:700;font-size:13px;padding:8px 14px;border-radius:10px;cursor:pointer;border:none;background:var(--primary);color:#fff;text-decoration:none;display:inline-block}
+  .btn--danger{background:#b91c1c}
+  .note{padding:12px 16px;border-radius:10px;margin-bottom:16px;font-size:14px;background:#d1fae5;color:#065f46}
+  .empty{text-align:center;padding:28px;color:var(--muted)}
+</style>
+<link rel="stylesheet" th:href="@{/css/responsive.css}">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <div class="brand">
+      <img th:src="@{/images/ABiS.png}" alt="ABiS Logo" class="brand__logo-img">
+      <div>
+        <p class="brand__name">ABiS Student Management System</p>
+        <p class="brand__sub">Pending Registrations</p>
+      </div>
+    </div>
+    <div class="topbar__links">
+      <a th:href="@{/}" class="topbar__link">🏠 Dashboard</a>
+      <form th:action="@{/logout}" method="post" style="display:inline">
+        <input type="hidden" name="_csrf" th:value="${session.csrfToken}">
+        <button type="submit" class="topbar__link"
+                style="background:none;border:none;cursor:pointer;font:inherit;">🚪 Logout</button>
+      </form>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h1>Pending Registrations</h1>
+    <p class="hero__lead">Students who registered themselves. They appear in the app only after you approve them.</p>
+  </div>
+</section>
+
+<main class="pending-main">
+  <div class="container">
+    <div class="note" th:if="${param.approved}">Registration approved.</div>
+    <div class="note" th:if="${param.rejected}">Registration rejected and removed.</div>
+
+    <div class="card" style="overflow-x:auto">
+      <table class="ptable">
+        <thead>
+          <tr><th>ID</th><th>Name</th><th>Course</th><th>College</th><th>Email</th><th>Phone</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <tr th:if="${#lists.isEmpty(pending)}"><td colspan="7" class="empty">No pending registrations.</td></tr>
+          <tr th:each="s : ${pending}">
+            <td th:text="${s.id}">1</td>
+            <td><a th:href="@{/view/{id}(id=${s.id})}" th:text="${s.name}">Name</a></td>
+            <td th:text="${s.course}">Course</td>
+            <td th:text="${s.collegeName}">College</td>
+            <td th:text="${s.email}">Email</td>
+            <td th:text="${s.phone}">Phone</td>
+            <td style="white-space:nowrap">
+              <form th:action="@{/pending/approve}" method="post" style="display:inline">
+                <input type="hidden" name="_csrf" th:value="${session.csrfToken}">
+                <input type="hidden" name="id" th:value="${s.id}">
+                <button class="btn" type="submit">✅ Approve</button>
+              </form>
+              <form th:action="@{/pending/reject}" method="post" style="display:inline"
+                    onsubmit="return confirm('Reject and delete this registration?');">
+                <input type="hidden" name="_csrf" th:value="${session.csrfToken}">
+                <input type="hidden" name="id" th:value="${s.id}">
+                <button class="btn btn--danger" type="submit">❌ Reject</button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

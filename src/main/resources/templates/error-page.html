@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Something went wrong | ABiS Student Management System</title>
+
+<style>
+
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Arial, sans-serif; }
+
+body {
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f5f7fa;
+    padding:20px;
+}
+
+.card {
+    background:#fff;
+    width:100%;
+    max-width:460px;
+    border-radius:14px;
+    box-shadow:0 15px 40px rgba(0,0,0,.1);
+    padding:36px 30px;
+    text-align:center;
+}
+
+.icon { font-size:44px; margin-bottom:10px; }
+h1 { font-size:19px; color:#111827; margin-bottom:10px; }
+p { font-size:14px; color:#6b7280; margin-bottom:24px; line-height:1.5; }
+
+.btn {
+    display:inline-block;
+    padding:11px 22px;
+    background:#2563eb;
+    color:#fff;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:600;
+    font-size:14px;
+}
+
+.btn:hover { background:#1d4ed8; }
+
+</style>
+<link rel="stylesheet" th:href="@{/css/responsive.css}">
+</head>
+<body>
+
+<div class="card">
+    <div class="icon">⚠️</div>
+    <h1>Something went wrong</h1>
+    <p th:text="${message} ?: 'An unexpected error occurred while processing your request. Please try again.'">
+        An unexpected error occurred while processing your request. Please try again.
+    </p>
+    <a th:href="@{/}" class="btn">🏠 Back to Dashboard</a>
+</div>
+
+<div th:replace="~{footer :: siteFooter}"></div>
+</body>
+</html>

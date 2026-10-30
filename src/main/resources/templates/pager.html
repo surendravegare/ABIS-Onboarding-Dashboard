@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Pager</title>
+</head>
+<body>
+
+<!-- Shared pager. Use on a page with:
+     <div th:replace="~{pager :: pager(${studentPage}, ${pagerBase})}"></div>
+     pagerBase is the page URL ending in "?" or "&", e.g. "/students?q=abc&" -->
+<th:block th:fragment="pager(pg, base)">
+
+<style>
+    .sp-pager{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:14px 20px;border-top:1px solid #e5e7eb;font-size:13px;color:#6b7280}
+    .sp-pager__btns{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+    .sp-pager__btn{min-width:34px;padding:6px 10px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;color:#1e3a8a;font-weight:600;text-align:center;text-decoration:none}
+    a.sp-pager__btn:hover{background:#eef2ff}
+    .sp-pager__btn--on{background:#1e3a8a;border-color:#1e3a8a;color:#fff}
+    .sp-pager__btn--off{opacity:.45}
+    .sp-pager__dots{padding:0 4px}
+</style>
+
+<div class="sp-pager" th:if="${pg.totalElements > 0}"
+     th:with="first=${pg.number * pg.size + 1}, last=${pg.number * pg.size + pg.numberOfElements},
+              from=${T(java.lang.Math).max(0, pg.number - 2)},
+              to=${T(java.lang.Math).min(pg.totalPages - 1, pg.number + 2)}">
+
+    <span th:text="'Showing ' + ${first} + '–' + ${last} + ' of ' + ${pg.totalElements}"></span>
+
+    <div class="sp-pager__btns" th:if="${pg.totalPages > 1}">
+
+        <a class="sp-pager__btn" th:if="${pg.hasPrevious()}" th:href="@{${base + 'page=' + (pg.number - 1)}}">Prev</a>
+        <span class="sp-pager__btn sp-pager__btn--off" th:unless="${pg.hasPrevious()}">Prev</span>
+
+        <a class="sp-pager__btn" th:if="${from > 0}" th:href="@{${base + 'page=0'}}">1</a>
+        <span class="sp-pager__dots" th:if="${from > 1}">…</span>
+
+        <th:block th:each="n : ${#numbers.sequence(from, to)}">
+            <span class="sp-pager__btn sp-pager__btn--on" th:if="${n == pg.number}" th:text="${n + 1}"></span>
+            <a class="sp-pager__btn" th:unless="${n == pg.number}" th:href="@{${base + 'page=' + n}}" th:text="${n + 1}"></a>
+        </th:block>
+
+        <span class="sp-pager__dots" th:if="${to < pg.totalPages - 2}">…</span>
+        <a class="sp-pager__btn" th:if="${to < pg.totalPages - 1}" th:href="@{${base + 'page=' + (pg.totalPages - 1)}}"
+           th:text="${pg.totalPages}"></a>
+
+        <a class="sp-pager__btn" th:if="${pg.hasNext()}" th:href="@{${base + 'page=' + (pg.number + 1)}}">Next</a>
+        <span class="sp-pager__btn sp-pager__btn--off" th:unless="${pg.hasNext()}">Next</span>
+
+    </div>
+</div>
+
+</th:block>
+
+</body>
+</html>

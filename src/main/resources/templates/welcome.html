@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Welcome | AB Infotech Solutions Student Management System</title>
+<link rel="icon" type="images/png" th:href="@{/images/ABiS.png}">
+
+
+<style>
+
+    :root{
+        --brand:#3e392e;
+        --brand-dark:#110e0a;
+        --bg:#faf9f6;
+        --bg-soft:#f3f1ea;
+        --surface:#ffffff;
+        --border:#e6e2d8;
+        --text:#2b2a25;
+        --muted:#6b6558;
+        --radius:12px;
+        --shadow:0 2px 10px rgba(0,0,0,.06);
+    }
+
+    html{
+        background:var(--bg);
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+        margin:0;
+        font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+        color:var(--text);
+        background:var(--bg);
+        line-height:1.5;
+    }
+
+    img{ max-width:100%; display:block; }
+
+    .wp-container{
+        width:100%;
+        max-width:1400px;
+        margin:0 auto;
+        padding:0 24px;
+    }
+
+    a{ text-decoration:none; }
+
+    /* ---------- HEADER ---------- */
+
+    .wp-header{
+        background:var(--surface);
+        border-bottom:1px solid var(--border);
+        padding:16px 0;
+    }
+
+    .wp-header__inner{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        flex-wrap:wrap;
+        gap:12px;
+    }
+
+    .wp-brand{
+        display:flex;
+        align-items:center;
+        gap:14px;
+    }
+
+    .wp-brand__logo{
+        height:48px;
+        width:auto;
+    }
+
+    .wp-brand__name{
+        margin:0;
+        font-size:16px;
+        font-weight:700;
+        color:var(--text);
+    }
+
+    .wp-brand__sub{
+        margin:2px 0 0;
+        font-size:12.5px;
+        color:var(--muted);
+    }
+
+    .wp-header-actions{
+        display:flex;
+        align-items:center;
+        gap:10px;
+    }
+
+    .wp-header-actions .wp-btn{
+        padding:9px 16px;
+        font-size:13px;
+    }
+
+    /* ---------- BUTTONS ---------- */
+
+    .wp-btn{
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        padding:11px 22px;
+        border-radius:8px;
+        font-size:14px;
+        font-weight:700;
+        border:2px solid transparent;
+        cursor:pointer;
+        white-space:nowrap;
+    }
+
+    .wp-btn--dark{
+        background:var(--brand);
+        color:#fff;
+        border-color:var(--brand);
+    }
+    .wp-btn--dark:hover{ background:var(--brand-dark); border-color:var(--brand-dark); }
+
+    .wp-btn--outline{
+        background:#fff;
+        color:var(--brand);
+        border-color:var(--brand);
+    }
+    .wp-btn--outline:hover{ background:var(--bg-soft); }
+
+    .wp-btn--outline-light{
+        background:transparent;
+        color:#fff;
+        border-color:#fff;
+    }
+    .wp-btn--outline-light:hover{ background:rgba(255,255,255,.12); }
+
+    .wp-btn--light{
+        background:#fff;
+        color:var(--brand);
+        border-color:#fff;
+    }
+    .wp-btn--light:hover{ background:var(--bg-soft); }
+
+    /* ---------- HERO ---------- */
+
+    .wp-hero{
+        background:var(--brand);
+        color:#fff;
+        padding:64px 0 44px;
+        text-align:center;
+    }
+
+    .wp-hero__lede{
+    	max-width:900px;
+    	margin:0 auto 24px;
+	}
+
+    .wp-hero h1{
+        font-size:36px;
+        margin:0 0 16px;
+        line-height:1.2;
+        text-wrap:balance;
+    }
+
+    .wp-hero p{
+        margin:0 0 28px;
+        color:rgba(255,255,255,.88);
+        font-size:16px;
+        line-height:1.7;
+    }
+
+    .wp-hero__cta{
+        display:flex;
+        justify-content:center;
+        flex-wrap:wrap;
+        gap:12px;
+    }
+
+    .wp-banner-success{
+        max-width:640px;
+        margin:24px auto 0;
+        background:#d1fae5;
+        color:#065f46;
+        border:1px solid #6ee7b7;
+        padding:14px 20px;
+        border-radius:8px;
+        text-align:center;
+        font-weight:600;
+        font-size:14px;
+    }
+
+    .wp-stats{
+        max-width:900px;
+        margin:40px auto 0;
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:16px;
+    }
+
+    .wp-stat{
+        background:rgba(255,255,255,.08);
+        border:1px solid rgba(255,255,255,.22);
+        border-radius:var(--radius);
+        padding:18px 8px;
+        text-align:center;
+    }
+
+    .wp-stat b{
+        display:block;
+        font-size:24px;
+        margin-bottom:4px;
+    }
+
+    .wp-stat span{
+        font-size:12px;
+        color:rgba(255,255,255,.85);
+    }
+
+    /* ---------- SECTION HEADINGS ---------- */
+
+    .wp-section{ padding:56px 0; }
+
+    .wp-section h2{
+        font-size:24px;
+        margin:0 0 14px;
+        text-align:left;
+    }
+
+    .wp-section > .wp-container > p{
+        color:var(--muted);
+        font-size:15px;
+        line-height:1.75;
+        margin:0 0 16px;
+        max-width:780px;
+    }
+
+    /* ---------- CREDENTIALS ---------- */
+
+    .wp-cred-row{
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:14px;
+        margin:0 0 8px;
+    }
+
+    .wp-cred-chip{
+        background:var(--surface);
+        border:1px solid var(--border);
+        border-radius:10px;
+        padding:14px 18px;
+        text-align:center;
+    }
+
+    .wp-cred-chip b{
+        display:block;
+        font-size:11px;
+        font-weight:700;
+        letter-spacing:.03em;
+        text-transform:uppercase;
+        color:var(--muted);
+        margin-bottom:4px;
+    }
+
+    .wp-cred-chip span{
+        font-size:14px;
+        font-weight:600;
+        color:var(--text);
+    }
+
+    /* ---------- SERVICE / FEATURE CARDS ---------- */
+
+    .wp-feature-grid{
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:20px;
+        margin-top:32px;
+    }
+
+    .wp-feature-card{
+        background:var(--surface);
+        border:1px solid var(--border);
+        border-radius:var(--radius);
+        box-shadow:var(--shadow);
+        padding:24px 22px;
+    }
+
+    .wp-feature-card .wp-icon{
+        font-size:28px;
+        display:block;
+        margin-bottom:14px;
+    }
+
+    .wp-feature-card h3{
+        font-size:15.5px;
+        margin:0 0 8px;
+        color:var(--text);
+    }
+
+    .wp-feature-card p{
+        font-size:13.5px;
+        color:var(--muted);
+        margin:0;
+        line-height:1.6;
+    }
+
+    /* ---------- INTERNSHIP SECTION ---------- */
+
+    .wp-section--soft{
+        background:var(--bg-soft);
+        border-top:1px solid var(--border);
+        border-bottom:1px solid var(--border);
+    }
+
+    .wp-perk-list{
+        list-style:none;
+        margin:22px 0 32px;
+        padding:0;
+        display:flex;
+        flex-wrap:wrap;
+        gap:12px 26px;
+    }
+
+    .wp-perk-list li{
+        font-size:14px;
+        font-weight:600;
+        color:var(--text);
+    }
+
+    .wp-eyebrow{
+        display:block;
+        font-size:12px;
+		text-align: center;
+        font-weight:700;
+        letter-spacing:.06em;
+        text-transform:uppercase;
+        color:var(--brand);
+        margin:0 0 8px;
+    }
+
+	.wp-domain-cloud{
+	    display:grid;
+	    grid-template-columns:repeat(7, 1fr);
+	    gap:12px;
+	    margin-top:20px;
+	}
+
+	.wp-domain-chip{
+	    background:var(--surface);
+	    border:1px solid var(--border);
+	    border-radius:999px;
+	    padding:10px 15px;
+	    font-size:13px;
+	    font-weight:600;
+	    color:var(--text);
+	    text-align:center;
+	    white-space:nowrap;
+	}
+
+    /* ---------- PARTNERS ---------- */
+
+    .wp-partners{
+        text-align:center;
+        padding:56px 0;
+    }
+
+    .wp-partners p{
+        max-width:680px;
+        margin:0 auto;
+        color:var(--muted);
+        font-size:15px;
+        line-height:1.75;
+    }
+
+    .wp-partner-count{
+        font-size:44px;
+        font-weight:800;
+        color:var(--brand);
+        margin:0 0 6px;
+    }
+
+    /* ---------- CTA ---------- */
+
+    .wp-cta{
+        background:var(--bg-soft);
+        border-top:1px solid var(--border);
+        padding:48px 24px;
+        text-align:center;
+    }
+
+    .wp-cta h2{
+        font-size:22px;
+        margin:0 0 8px;
+    }
+
+    .wp-cta p{
+        color:var(--muted);
+        margin:0 0 22px;
+        font-size:14px;
+    }
+
+    /* ---------- CONTACT ---------- */
+
+    .wp-contact-grid{
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:24px;
+        padding:48px 0 60px 100px;
+    }
+
+    .wp-contact-item{
+        border-left:3px solid var(--brand);
+        padding-left:14px;
+    }
+
+    .wp-contact-item b{
+        display:block;
+        font-size:11px;
+        font-weight:700;
+        letter-spacing:.03em;
+        text-transform:uppercase;
+        color:var(--muted);
+        margin-bottom:6px;
+    }
+
+    .wp-contact-item span{
+        font-size:13.5px;
+        color:var(--text);
+        line-height:1.55;
+    }
+
+    
+
+    /* ---------- RESPONSIVE ---------- */
+
+    @media(max-width:900px){
+        .wp-feature-grid{ grid-template-columns:repeat(2,1fr); }
+        .wp-contact-grid{ grid-template-columns:repeat(2,1fr); }
+        .wp-cred-row{ grid-template-columns:repeat(2,1fr); }
+    }
+
+    @media(max-width:700px){
+    .wp-stats{ grid-template-columns:repeat(2,1fr); }
+    .wp-hero h1{ font-size:24px; }
+    html, body{ overflow-x:hidden; }
+	}
+
+    @media(max-width:560px){
+        .wp-feature-grid{ grid-template-columns:1fr; }
+        .wp-contact-grid{ grid-template-columns:1fr; }
+        .wp-cred-row{ grid-template-columns:1fr; }
+        .wp-container{ padding:0 20px; }
+		.wp-domain-cloud{
+		        display:grid;
+		        grid-template-columns:repeat(2,minmax(0,1fr));
+		        gap:10px;
+		    }
+
+		    .wp-domain-chip{
+		        white-space:normal;
+		        text-align:center;
+		        padding:12px 8px;
+		        font-size:12px;
+		    }
+    }
+
+/* ================= ADVANCED / INTERACTIVE UPGRADE ================= */
+
+/* ---- Sticky glass header ---- */
+.wp-header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(255,255,255,.82);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    transition:box-shadow .3s ease;
+}
+
+/* ---- Hero: animated gradient + floating glow orbs ---- */
+.wp-hero{
+    position:relative;
+    overflow:hidden;
+    background:linear-gradient(120deg,#3e392e,#1c1812,#5a5138,#3e392e);
+    background-size:300% 300%;
+    animation:wp-gradient 14s ease infinite;
+}
+.wp-hero::before,
+.wp-hero::after{
+    content:"";
+    position:absolute;
+    border-radius:50%;
+    filter:blur(70px);
+    opacity:.35;
+    pointer-events:none;
+}
+.wp-hero::before{
+    width:320px; height:320px;
+    background:#f5c86a;
+    top:-100px; left:-80px;
+    animation:wp-float 9s ease-in-out infinite;
+}
+.wp-hero::after{
+    width:280px; height:280px;
+    background:#6aa8f5;
+    bottom:-120px; right:-60px;
+    animation:wp-float 11s ease-in-out infinite reverse;
+}
+.wp-hero .wp-container{ position:relative; z-index:1; }
+
+/* Heading with a soft gradient shine */
+.wp-hero h1{
+    background:linear-gradient(90deg,#fff,#f5e3b3,#fff);
+    background-size:200% auto;
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:wp-shine 6s linear infinite;
+}
+
+/* ---- Buttons: lift + light sweep ---- */
+.wp-btn{
+    position:relative;
+    overflow:hidden;
+    transition:transform .25s ease, box-shadow .25s ease, background .25s ease;
+}
+.wp-btn::after{
+    content:"";
+    position:absolute;
+    top:0; left:-120%;
+    width:60%; height:100%;
+    background:linear-gradient(120deg,transparent,rgba(255,255,255,.55),transparent);
+    transform:skewX(-20deg);
+    transition:left .6s ease;
+}
+.wp-btn:active{ transform:scale(.96); }
+
+/* ---- Stats: glass cards ---- */
+.wp-stat{
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.22);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    transition:transform .3s ease, background .3s ease, border-color .3s ease;
+}
+
+/* ---- Cards, chips: smooth transitions ---- */
+.wp-feature-card,
+.wp-cred-chip,
+.wp-contact-item,
+.wp-domain-chip{
+    transition:transform .3s cubic-bezier(.2,.8,.2,1),
+               box-shadow .3s ease,
+               border-color .3s ease,
+               background .3s ease;
+}
+.wp-icon{
+    display:inline-block;
+    transition:transform .4s cubic-bezier(.3,1.6,.5,1);
+}
+
+/* ---- Hover effects: only on devices that really have a mouse ---- */
+@media (hover:hover){
+    .wp-btn:hover{
+        transform:translateY(-3px);
+        box-shadow:0 10px 24px rgba(0,0,0,.28);
+    }
+    .wp-btn:hover::after{ left:140%; }
+
+    .wp-stat:hover{
+        transform:translateY(-6px);
+        background:rgba(255,255,255,.16);
+        border-color:rgba(255,255,255,.5);
+    }
+    .wp-feature-card:hover{
+        transform:translateY(-8px);
+        box-shadow:0 18px 40px rgba(62,57,46,.18);
+        border-color:#3e392e;
+    }
+    .wp-feature-card:hover .wp-icon{
+        transform:scale(1.25) rotate(-8deg);
+    }
+    .wp-cred-chip:hover,
+    .wp-contact-item:hover{
+        transform:translateY(-4px);
+        box-shadow:0 12px 26px rgba(62,57,46,.15);
+    }
+    .wp-domain-chip:hover{
+        transform:translateY(-3px) scale(1.05);
+        background:#3e392e;
+        color:#fff;
+        border-color:#3e392e;
+    }
+}
+
+/* ---- Keyboard focus ---- */
+a:focus-visible,
+.wp-btn:focus-visible{
+    outline:3px solid #f5c86a;
+    outline-offset:3px;
+}
+
+.wp-feature-card:active,
+.wp-stat:active,
+.wp-cred-chip:active,
+.wp-contact-item:active,
+.wp-domain-chip:active{
+    transform:translateY(-4px) scale(.97);
+}
+
+/* ---- Entrance animation on page load (hero) ---- */
+.wp-hero__lede,
+.wp-hero__cta,
+.wp-stats{
+    animation:wp-fade-up .8s cubic-bezier(.2,.8,.2,1) both;
+}
+.wp-hero__cta{ animation-delay:.15s; }
+.wp-stats{ animation-delay:.3s; }
+
+.wp-stat:nth-child(1){ animation:wp-fade-up .7s .40s backwards; }
+.wp-stat:nth-child(2){ animation:wp-fade-up .7s .50s backwards; }
+.wp-stat:nth-child(3){ animation:wp-fade-up .7s .60s backwards; }
+.wp-stat:nth-child(4){ animation:wp-fade-up .7s .70s backwards; }
+
+/* ---- Reveal on scroll (modern browsers; others just see normal content) ---- */
+@supports (animation-timeline: view()){
+    .reveal{ opacity:0; }
+	.reveal.in{
+		opacity:1;
+    	animation:wp-reveal .7s cubic-bezier(.2,.8,.2,1) backwards;
+	}
+}
+
+/* ---- Keyframes ---- */
+@keyframes wp-gradient{
+    0%  { background-position:0% 50%; }
+    50% { background-position:100% 50%; }
+    100%{ background-position:0% 50%; }
+}
+@keyframes wp-float{
+    0%,100%{ transform:translate(0,0); }
+    50%    { transform:translate(40px,30px); }
+}
+@keyframes wp-shine{
+    to{ background-position:200% center; }
+}
+@keyframes wp-fade-up{
+    from{ opacity:0; transform:translateY(24px); }
+    to  { opacity:1; transform:translateY(0); }
+}
+@keyframes wp-reveal{
+    from{ opacity:0; transform:translateY(40px) scale(.97); }
+    to  { opacity:1; transform:translateY(0) scale(1); }
+}
+
+/* ---- Respect people who turn animations off ---- */
+@media (prefers-reduced-motion:reduce){
+    *,
+    *::before,
+    *::after{
+        animation:none !important;
+        transition:none !important;
+    }
+    .wp-hero h1{ -webkit-text-fill-color:#fff; background:none; }
+}
+
+</style>
+<link rel="stylesheet" th:href="@{/css/responsive.css}">
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header class="wp-header">
+    <div class="wp-container wp-header__inner">
+
+        <div class="wp-brand">
+            <img th:src="@{/images/ABiS.png}" alt="AB Infotech Solutions Logo" class="wp-brand__logo">
+            <div>
+                <p class="wp-brand__name">AB Infotech Solutions Pvt Ltd</p>
+                <p class="wp-brand__sub">Training &amp; Internship Programs</p>
+            </div>
+        </div>
+
+
+    </div>
+</header>
+
+<!-- ================= HERO ================= -->
+
+<section class="wp-hero">
+    <div class="wp-container">
+        <div class="wp-hero__lede">
+            <h1>Welcome to AB Infotech Solutions Pvt Ltd</h1>
+            
+        </div>
+
+        <div class="wp-hero__cta">
+            <a th:href="@{/register}" class="wp-btn wp-btn--light">📝 Register as a Student</a>
+            <a th:href="@{/login}" class="wp-btn wp-btn--outline-light">🔐 Admin Login</a>
+        </div>
+
+        <div class="wp-banner-success" th:if="${registered}">
+            ✅ Thanks for registering! Your details have been submitted successfully.
+        </div>
+
+        <div class="wp-stats">
+            <div class="wp-stat"><b>50+</b><span>Partner Colleges</span></div>
+            <div class="wp-stat"><b>1000+</b><span>Interns Trained</span></div>
+            <div class="wp-stat"><b>100+</b><span>Client Projects</span></div>
+            <div class="wp-stat"><b>99%</b><span>Client Satisfaction</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+
+<section class="wp-section">
+    <div class="wp-container">
+        <div class="wp-cred-row">
+            <div class="wp-cred-chip"><b>Certification</b><span>ISO 9001:2015</span></div>
+            <div class="wp-cred-chip"><b>Registration No.</b><span>230422082732QRA</span></div>
+            <div class="wp-cred-chip"><b>CIN</b><span>U78100PN2023PTC222242</span></div>
+            <div class="wp-cred-chip"><b>CEO &amp; Founder</b><span>Akshay Ashok Bhalerao</span></div>
+        </div>
+
+        <div class="wp-feature-grid">
+
+            <div class="wp-feature-card">
+                <span class="wp-icon">💻</span>
+                <h3>Web &amp; Java Development</h3>
+                <p>Responsive websites, enterprise applications and Java-based solutions using modern frameworks.</p>
+            </div>
+
+            <div class="wp-feature-card">
+                <span class="wp-icon">🛡️</span>
+                <h3>Cyber Security</h3>
+                <p>Vulnerability assessment, penetration testing, audits and security awareness programs.</p>
+            </div>
+
+            <div class="wp-feature-card">
+                <span class="wp-icon">☁️</span>
+                <h3>Cloud Computing</h3>
+                <p>Secure cloud migration, deployment, management and cost optimization for enterprises.</p>
+            </div>
+
+            <div class="wp-feature-card">
+                <span class="wp-icon">📊</span>
+                <h3>Data Analysis</h3>
+                <p>Converting raw data into insights through analytics, visualization and reporting solutions.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ================= INTERNSHIP & DOMAINS ================= -->
+
+<section class="wp-section wp-section--soft">
+    <div class="wp-container">
+        <span class="wp-eyebrow">Internship &amp; Training Programs</span>
+       
+        <ul class="wp-perk-list">
+            <li>🚀 Real-time Project Experience</li>
+            <li>🧠 Industry-standard Tools</li>
+            <li>👨‍🏫 Professional Mentorship</li>
+            <li>📄 Internship Certificate</li>
+            <li>📈 Performance Evaluation</li>
+            <li>🏢 Corporate Workflow Exposure</li>
+        </ul>
+
+        <span class="wp-eyebrow">Domains Available</span>
+        <div class="wp-domain-cloud">
+            <span class="wp-domain-chip">Java Developer</span>
+            <span class="wp-domain-chip">Web Developer</span>
+            <span class="wp-domain-chip">Cyber Security</span>
+            <span class="wp-domain-chip">Cloud Computing</span>
+            <span class="wp-domain-chip">Data Analysis</span>
+            <span class="wp-domain-chip">Data Science</span>
+            <span class="wp-domain-chip">AI/ML</span>
+            <span class="wp-domain-chip">Python</span>
+            <span class="wp-domain-chip">Business Analysis</span>
+            <span class="wp-domain-chip">HR</span>
+            <span class="wp-domain-chip">Finance</span>
+            <span class="wp-domain-chip">Marketing</span>
+            <span class="wp-domain-chip">Operations</span>
+            <span class="wp-domain-chip">Graphic Design</span>
+        </div>
+    </div>
+</section>
+
+<!-- ================= CTA ================= -->
+
+
+
+<!-- ================= CONTACT ================= -->
+
+<section>
+    <div class="wp-container  wp-contact-grid">
+        <div class="wp-contact-item">
+            <b>📍 Address</b>
+            <span>Office No. 514, A wing Nyati Empress Clover Park Viman Nagar,Pune 411014</span>
+        </div>
+        <div class="wp-contact-item">
+            <b>📧 Email</b>
+            <span>hr@abinfotechsolutions.com</span>
+        </div>
+        <div class="wp-contact-item">
+            <b>📞 Phone</b>
+            <span>+91 9545897754 / +91 8999897754</span>
+        </div>
+        <div class="wp-contact-item">
+            <b>👨‍💼 CEO &amp; Founder</b>
+            <span>Akshay Ashok Bhalerao</span>
+        </div>
+    </div>
+</section>
+
+<div th:replace="~{footer :: siteFooter}"></div>
+
+<script>
+(function () {
+    if (!('IntersectionObserver' in window)) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var items = document.querySelectorAll(
+        '.wp-feature-card, .wp-cred-chip, .wp-contact-item, .wp-eyebrow, .wp-section h2'
+    );
+
+    var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+            if (e.isIntersecting) {
+                e.target.classList.add('in');
+                io.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.12 });
+
+    items.forEach(function (el) {
+        el.classList.add('reveal');
+        io.observe(el);
+    });
+})();
+</script>
+
+</body>
+</html>

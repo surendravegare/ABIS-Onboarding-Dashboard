@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login | ABIS Student Management System</title>
+<link rel="icon" type="images/png" th:href="@{/images/ABiS.png}">
+
+<style>
+
+	*{
+	    margin:0;
+	    padding:0;
+	    box-sizing:border-box;
+	    font-family:'Segoe UI',sans-serif;
+	}
+
+	body{
+
+	    height:100vh;
+
+	    display:flex;
+
+	    justify-content:center;
+
+	    align-items:center;
+
+		background-image: url('/images/background.jpg');
+
+	    background-size:cover;
+
+	    background-position:center;
+	}
+
+	.login-container{
+
+	    width:950px;
+
+	    height:440px;
+
+	    display:flex;
+
+	    border-radius:20px;
+
+	    overflow:hidden;
+
+	    background:white;
+
+	    box-shadow:0 25px 60px rgba(0,0,0,.35);
+	}
+
+	/* LEFT */
+
+	.left-panel{
+
+	    width:45%;
+
+	    background:#3e392e;
+
+	    color:white;
+
+	    display:flex;
+
+	    flex-direction:column;
+
+	    justify-content:center;
+
+	    align-items:center;
+
+	    padding:50px;
+	}
+
+	.company-logo{
+
+	    width:330px;
+
+	    margin-bottom:15px;
+
+	    background:white;
+
+	    border-radius:15px;
+
+	    padding:20px;
+	}
+
+	.left-panel h1{
+
+	    font-size:38px;
+
+	    text-align:center;
+
+	    margin-bottom:20px;
+	}
+
+	.left-panel p{
+
+	    text-align:center;
+
+	    line-height:30px;
+
+	    font-size:18px;
+
+	    opacity:.9;
+	}
+
+	/* RIGHT */
+
+	.right-panel{
+
+	    width:55%;
+
+	    display:flex;
+
+	    flex-direction:column;
+
+	    justify-content:center;
+
+	    padding:70px;
+	}
+
+	.right-panel h2{
+
+	    font-size:34px;
+
+	    color:#110e0a;
+
+	    margin-bottom:35px;
+	}
+
+	label{
+
+	    display:block;
+
+	    margin-bottom:8px;
+
+	    font-weight:600;
+	}
+
+	input{
+
+	    width:100%;
+
+	    padding:15px;
+
+	    margin-bottom:25px;
+
+	    border-radius:10px;
+
+	    border:1px solid #ccc;
+
+	    font-size:16px;
+	}
+
+	button{
+
+	    width:100%;
+
+	    padding:16px;
+
+	    border:none;
+
+	    border-radius:10px;
+
+	    background:#3e392e;
+
+	    color:white;
+
+	    font-size:18px;
+
+	    cursor:pointer;
+
+	    font-weight:bold;
+	}
+
+	button:hover{
+
+	    background:#110e0a;
+	}
+	
+	@media (max-width:768px){
+
+	    .left-panel{
+	        display:none;
+	    }
+
+	    .right-panel{
+	        width:100%;
+	        padding:25px 25px;
+	    }
+
+	    .login-container{
+	        max-width:340px;
+	    }
+	}
+
+</style>
+<link rel="stylesheet" th:href="@{/css/responsive.css}">
+</head>
+<body>
+
+	<div class="login-container">
+
+	    <div class="left-panel">
+
+	        <img th:src="@{/images/ABiS.png}" class="company-logo">
+
+<!--	        <h1>ABiS Student<br>Management System</h1>-->
+
+<!--	        <p>-->
+<!--	            Manage Students, Courses, Attendance and Reports-->
+<!--	            from one secure platform.-->
+<!--	        </p>-->
+
+	    </div>
+
+	    <div class="right-panel">
+
+	        <h2>Welcome Back!</h2>
+
+	        <form th:action="@{/login}" method="post">
+<input type="hidden" name="_csrf" th:value="${session.csrfToken}">
+
+	            <label>Username</label>
+	            <input type="text"
+	                   name="username"
+	                   placeholder="Enter Username"
+	                   required>
+
+	            <label>Password</label>
+	            <input type="password"
+	                   name="password"
+	                   placeholder="Enter Password"
+	                   required>
+
+	            <button type="submit">
+	                🔐 Login
+	            </button>
+
+	        </form>
+
+	    </div>
+
+	</div>
+
+</body>
+</html>

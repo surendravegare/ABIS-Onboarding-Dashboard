@@ -1,0 +1,76 @@
+/* ==========================================================================
+   responsive.css  -  loaded LAST on every page (after each page's own <style>)
+   so it can adjust layout for phones, tablets and large screens in one place.
+   Breakpoints:  large >= 1600px | laptop/tablet <= 1024px | tablet <= 820px
+                 | phone <= 600px | small phone <= 400px
+   ========================================================================== */
+
+html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+img,video,canvas,svg{ max-width:100%; }
+a,button,select,label{ touch-action:manipulation; }
+
+/* Long emails / names must wrap instead of pushing the page sideways */
+.field__val,.idcard__name,.brand__name{ overflow-wrap:anywhere; }
+
+/* Tables scroll inside their own box instead of widening the page */
+.table-wrap{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+/* ---------- Large screens: keep content readable, centred ---------- */
+@media (min-width:1600px){
+  body .container,
+  body .topbar__inner,
+  body .main,
+  body .wp-container{
+    max-width:1500px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+}
+
+/* ---------- Laptops / small desktops ---------- */
+@media (max-width:1200px){
+  .profile-grid > .idcard{ max-width:420px; width:100%; margin-left:auto; margin-right:auto; }
+}
+
+/* ---------- Tablets ---------- */
+@media (max-width:1024px){
+  .topbar__inner{ flex-wrap:wrap; gap:10px 16px; }
+  .wp-domain-cloud{ grid-template-columns:repeat(auto-fit,minmax(150px,1fr)) !important; }
+}
+@media (max-width:820px){
+  .stats{ grid-template-columns:repeat(2,1fr); }
+  .toolbar{ flex-wrap:wrap; }
+  .card__head{ gap:10px; }
+}
+
+/* ---------- Phones ---------- */
+@media (max-width:600px){
+  .container,.topbar__inner,.main{ padding-left:14px; padding-right:14px; }
+
+  /* 16px inputs stop iPhones zooming in when a field is tapped */
+  input,select,textarea{ font-size:16px !important; }
+
+  /* Comfortable touch targets */
+  .btn,.btn--primary,.btn--ghost,button[type=submit],.save,.cancel{ min-height:44px; }
+
+  /* Form pages: tighter card, full-width stacked buttons */
+  .card:has(.form-grid){ padding:18px; margin-left:0; margin-right:0; }
+  .form-grid{ gap:14px; }
+  .btn-group{ display:flex; flex-direction:column; gap:10px; }
+  .btn-group .btn{ display:block; width:100%; margin:0; text-align:center; }
+
+  /* Tables keep a readable width and scroll sideways */
+  .table-wrap > table{ min-width:640px; }
+
+  .topbar__links{ gap:6px 14px; }
+  .brand__logo-img{ height:36px; }
+  .pager,.pager__links{ flex-wrap:wrap; }
+  .modal__box{ padding:18px; }
+  .modal .row{ grid-template-columns:1fr; }
+}
+
+/* ---------- Very small phones ---------- */
+@media (max-width:400px){
+  .stats{ grid-template-columns:1fr; }
+  .brand__name{ font-size:12px; }
+}

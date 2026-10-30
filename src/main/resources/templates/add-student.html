@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Add Student | ABiS Student Management System</title>
+<link rel="icon" type="images/png" th:href="@{/images/ABiS.png}">
+
+<link rel="stylesheet" th:href="@{/css/style.css}">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f5f7fa;
+}
+
+.header{
+    background:#3e392e;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+.header__brand{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+}
+
+.header__logo-wrap{
+    background:#fff;
+    border-radius:8px;
+    padding:5px 10px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.header__logo{
+    height:44px;
+    width:auto;
+    display:block;
+}
+
+.header h2{
+    margin-bottom:5px;
+}
+
+.container{
+    width:100%;
+    max-width:100%;
+    margin:10px 0;
+    padding:0 20px;
+}
+
+.card{
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+    max-width:1200px;
+    margin:20px auto;
+}
+
+input[type=number]{ -moz-appearance:textfield; appearance:textfield; }
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+
+.hint{ display:block; margin-top:4px; font-size:12px; color:#6b7280; }
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:18px 20px;
+}
+
+.row{ display:contents; }
+
+.col{ min-width:0; }
+
+label{
+    display:block;
+    margin-bottom:6px;
+    font-weight:bold;
+}
+
+input,
+select,
+textarea{
+
+    width:100%;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    font-size:15px;
+
+}
+
+textarea{
+    height:100px;
+    resize:vertical;
+}
+
+.btn-group{
+
+    margin-top:30px;
+    text-align:center;
+
+}
+
+.btn{
+
+    display:inline-block;
+    padding:12px 20px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    text-decoration:none;
+    font-size:16px;
+    margin:0 10px;
+
+}
+
+.save{
+
+    background:#059669;
+    color:white;
+
+}
+
+.save:hover{
+
+    background:#047857;
+
+}
+
+.cancel{
+
+    background:#3e392e;
+    color:white;
+
+}
+
+.cancel:hover{
+
+    background:#4b5563;
+
+}
+
+@media(max-width:900px){ .form-grid{ grid-template-columns:repeat(2, 1fr); } }
+@media(max-width:600px){ .form-grid{ grid-template-columns:1fr; } }
+@media(max-width:768px){ .container{ width:95%; } }
+
+
+
+.fee-status {
+    display:inline-flex;
+    align-items:center;
+    margin-top:8px;
+    padding:4px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.04em;
+}
+.fee-status--paid { background:#dcfce7; color:#166534; }
+.fee-status--unpaid { background:#fee2e2; color:#b91c1c; }
+.fee-status--partial { background:#fef3c7; color:#b45309; }
+
+.col:has(input[required], select[required]) > label::after {
+    content: " *";
+    color: #dc2626;
+    font-weight: 700;
+}
+
+</style>
+
+<link rel="stylesheet" th:href="@{/css/responsive.css}">
+</head>
+
+<body>
+
+	<header class="topbar">
+	    <div class="topbar__inner">
+	      <div class="brand">
+	        <img th:src="@{/images/ABiS.png}" alt="ABiS Logo" class="brand__logo-img">
+	        <div>
+	          <p class="brand__name">ABiS Student Management System</p>
+	          <p class="brand__sub">Add New Student</p>
+	        </div>
+	      </div>
+	      <span class="pill">Academic Year 2026–27</span>
+	    </div>
+	  </header>	
+	  
+<div class="header">
+
+<div class="header__brand">
+
+</div>
+
+</div>
+
+
+<div class="container">
+
+<div class="card">
+
+<div th:if="${error}" style="background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;padding:12px 16px;border-radius:8px;margin-bottom:20px;font-size:14px" th:text="${error}"></div>
+
+<form th:action="@{/save}" th:object="${student}" method="post" enctype="multipart/form-data">
+<input type="hidden" name="_csrf" th:value="${session.csrfToken}">
+
+
+
+<div class="form-grid"><div class="row">
+
+<div class="col">
+
+<label>Student Name</label>
+
+<input type="text"
+th:field="*{name}"
+placeholder="Enter Student Name"
+maxlength="100"
+required>
+
+</div>
+
+<div class="col">
+
+<label>Age</label>
+
+<select id="age" name="age" required>
+    <option value="">Select Age</option>
+    <option th:each="a : ${ageOptions}" th:value="${a}" th:text="${a}" th:selected="${student.age == a}"></option>
+</select>
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col">
+
+<label>Course</label>
+
+<select th:field="*{course}" required>
+    <option value="">Select Course</option>
+    <option th:each="c : ${courseOptions}" th:value="${c}" th:text="${c}"></option>
+</select>
+
+</div>
+
+<div class="col">
+
+<label>CGPA</label>
+
+<input type="number"
+th:field="*{cgpa}"
+inputmode="decimal"
+placeholder="Enter CGPA"
+min="0"
+max="10"
+step="0.01"
+required>
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col">
+
+<label>Domain</label>
+
+<select th:field="*{domain}" required>
+    <option value="">Select Domain</option>
+    <option th:each="d : ${domainOptions}" th:value="${d}" th:text="${d}"></option>
+</select>
+
+</div>
+
+
+
+<div class="col">
+
+<label>Passout Year</label>
+
+<select th:field="*{passoutYear}" required>
+    <option value="">Select Year</option>
+    <option th:each="y : ${yearOptions}" th:value="${y}" th:text="${y}"></option>
+</select>
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col">
+
+<label>Work Mode</label>
+
+<select th:field="*{workMode}" required>
+<option value="">Select Work Mode</option>
+<option value="Work From Office">Work From Office</option>
+<option value="Work From Home">Work From Home</option>
+<option value="Hybrid">Hybrid</option>
+</select>
+
+</div>
+
+</div>
+<div class="row">
+
+<div class="col">
+
+<label>Email</label>
+
+<input type="email"
+th:field="*{email}"
+placeholder="student@gmail.com"
+required>
+
+</div>
+
+<div class="col">
+
+<label>Phone</label>
+
+<input type="text"
+th:field="*{phone}"
+placeholder="9876543210"
+pattern="[0-9]{10}"
+required>
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col">
+
+<label>Joining Date</label>
+
+<input type="date"
+th:field="*{joiningDate}"
+required>
+
+</div>
+
+<div class="col">
+
+<label>Completion Date</label>
+
+<input type="date"
+th:field="*{completionDate}"
+required>
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col">
+
+<label>Total Fees</label>
+
+<input type="number"
+th:field="*{totalFees}"
+placeholder="Enter total fees"
+min="0"
+step="0.01"
+required>
+
+</div>
+
+<div class="col">
+
+<label>Fees Paid</label>
+
+<input type="number"
+th:field="*{feesPaid}"
+placeholder="Enter fees paid"
+min="0"
+step="0.01"
+required>
+
+<div id="feeStatus" class="fee-status fee-status--unpaid">UNPAID</div>
+<div id="dueAmount" style="margin-top:6px;font-size:13px;font-weight:600;color:#b91c1c"></div>
+
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col">
+	
+	<label>College Name</label>
+	<input type="text"
+	th:field="*{collegeName}"
+	placeholder="Enter College Name"
+	maxlength="200"
+	required>
+
+</div>
+
+<div class="col">
+
+<label>Profile Photo</label>
+
+<input type="file"
+name="photoFile"
+accept="image/jpeg,image/png,image/gif,image/webp" data-max-kb="50"
+required>
+<small class="hint">JPG, PNG, GIF or WEBP, max 50 KB</small>
+
+</div>
+	
+</div>
+
+
+</div> <!-- /form-grid -->
+
+<div class="btn-group">
+
+<button type="submit" class="btn save">
+
+💾 Save Student
+
+</button>
+
+<a th:href="@{/}" class="btn cancel">
+
+🏠 Back to Dashboard
+
+</a>
+
+</div>
+
+<script>
+(function () {
+    const totalFees = document.querySelector('[name="totalFees"]');
+    const feesPaid = document.querySelector('[name="feesPaid"]');
+    const status = document.getElementById('feeStatus');
+    if (!totalFees || !feesPaid || !status) return;
+
+    function updateFeeStatus() {
+        const total = parseFloat(totalFees.value) || 0;
+        const paid = parseFloat(feesPaid.value) || 0;
+        const due = Math.max(total - paid, 0);
+        const dueBox = document.getElementById('dueAmount');
+
+        let label = 'UNPAID', css = 'fee-status--unpaid';
+        if (total > 0 && paid >= total) { label = 'PAID'; css = 'fee-status--paid'; }
+        else if (total > 0 && paid > 0) { label = 'PARTIAL'; css = 'fee-status--partial'; }
+
+        status.textContent = label;
+        status.className = 'fee-status ' + css;
+        if (dueBox) {
+            dueBox.textContent = (total > 0 && due > 0)
+                ? 'Remaining due: ₹' + due.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})
+                : '';
+        }
+    }
+
+    totalFees.addEventListener('input', updateFeeStatus);
+    feesPaid.addEventListener('input', updateFeeStatus);
+    updateFeeStatus();
+})();
+</script>
+
+</form>
+
+</div>
+
+</div>
+
+<div th:replace="~{footer :: siteFooter}"></div>
+
+<script th:src="@{/js/photo-cropper.js(v=4)}"></script>
+
+</body>
+
+</html>

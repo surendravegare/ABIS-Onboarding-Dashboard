@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ABiS - Student Management System</title>
+<link rel="icon" type="images/png" th:href="@{/images/ABiS.png}">
+
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" th:href="@{/css/responsive.css}">
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header class="topbar">
+    <div class="container topbar__inner">
+
+        <div class="brand">
+
+            <img th:src="@{/images/ABiS.png}" alt="ABiS Logo" class="brand__logo-img">
+
+            <div>
+                <p class="brand__name">ABiS Student Management System</p>
+                <p class="brand__sub">Admin Dashboard</p>
+            </div>
+
+        </div>
+        <div class="topbar__links">
+        	<a th:href="@{/pending}" class="topbar__link">📥 Pending (<span th:text="${pendingCount}">0</span>)</a>
+            <a th:href="@{/change-password}" class="topbar__link">🔑 Change Password</a>
+            <form th:action="@{/logout}" method="post" style="display:inline">
+    		<input type="hidden" name="_csrf" th:value="${session.csrfToken}">
+    		<button type="submit" class="topbar__link"
+            style="background:none;border:none;cursor:pointer;font:inherit;">🚪 Logout</button>
+			</form>
+        </div>
+
+    </div>
+</header>
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <div class="container">
+
+        <h1>Student Records Dashboard</h1>
+
+        <p class="hero__lead">
+            Manage admissions, records and internship activity in one place.
+        </p>
+
+        <div class="actions">
+
+            <!-- Add Student -->
+            <a th:href="@{/add}" class="action-card">
+
+                <span class="icon icon--green">➕</span>
+
+                <span>
+                    <span class="action-card__title">Add Student</span>
+                    <span class="action-card__sub">New Admission</span>
+                </span>
+
+            </a>
+
+            <!-- View Students -->
+            <a th:href="@{/students}" class="action-card">
+
+                <span class="icon icon--blue">👥</span>
+
+                <span>
+                    <span class="action-card__title">View Students</span>
+                    <span class="action-card__sub">Student Register</span>
+                </span>
+
+            </a>
+
+            <!-- Search -->
+            <a th:href="@{/search}" class="action-card">
+
+                <span class="icon icon--amber">🔍</span>
+
+                <span>
+                    <span class="action-card__title">Search Student</span>
+                    <span class="action-card__sub">Search by Name</span>
+                </span>
+
+            </a>
+
+            <!-- Audit Log -->
+            <a th:href="@{/audit}" class="action-card">
+
+                <span class="icon icon--blue">🧾</span>
+
+                <span>
+                    <span class="action-card__title">Audit Log</span>
+                    <span class="action-card__sub">Who did what</span>
+                </span>
+
+            </a>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= MAIN ================= -->
+
+<main class="container main">
+
+    <div class="stack">
+
+        <!-- Student Register (full width) -->
+
+        <div class="card">
+
+            <div class="card__head">
+
+                <h2>Student Register</h2>
+
+                <form th:action="@{/search}" method="get">
+
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Search Student">
+
+                    <button type="submit">Search</button>
+
+                </form>
+
+            </div>
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Course</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Domain</th>
+                        <th>Joining Date</th>
+                        <th>Completion Date</th>
+                        <th>College Name</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="student : ${students}">
+
+                        <td th:text="${student.id}"></td>
+                        <td th:text="${student.name}"></td>
+                        <td th:text="${student.age}"></td>
+                        <td th:text="${student.course}"></td>
+                        <td th:text="${student.email}"></td>
+                        <td th:text="${student.phone}"></td>
+                        <td th:text="${student.domain}"></td>
+                        <td th:text="${student.joiningDate}"></td>
+                        <td th:text="${student.completionDate}"></td>
+                        <td th:text="${student.collegeName}"></td>
+
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(students)}">
+
+                        <td colspan="10" style="text-align:center;">
+                            No Student Records Found
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div th:replace="~{pager :: pager(${studentPage}, ${pagerBase})}"></div>
+
+        </div>
+        </div>
+
+    </div>
+
+</main>
+
+<div th:replace="~{footer :: siteFooter}"></div>
+
+
+
+
+</body>
+</html>

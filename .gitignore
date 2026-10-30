@@ -1,0 +1,30 @@
+# Maven build files
+target/
+build/
+
+# Uploaded files
+uploads/
+
+# Eclipse / Spring Tool Suite
+.settings/
+.classpath
+.project
+.factorypath
+.sts4-cache/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# macOS
+.DS_Store
+
+# Application logs
+logs/
+*.log
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example

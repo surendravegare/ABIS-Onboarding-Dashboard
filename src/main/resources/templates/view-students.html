@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>All Students · ABiS Student Management System</title>
+<link rel="icon" type="images/png" th:href="@{/images/ABiS.png}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f7fb; --card:#fff; --border:#e5e7eb; --muted:#6b7280; --text:#111827;
+    --primary:#1e3a8a; --primary-2:#2563eb; --success:#059669; --warning:#b45309; --accent:#eef2ff;
+    --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.05);
+    --shadow-lift:0 10px 30px rgba(30,58,138,.15); --radius:12px;
+  }
+  *{box-sizing:border-box} html,body{margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;color:var(--text);background:var(--bg);line-height:1.5}
+  h1,h2,.brand__name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;letter-spacing:-.01em}
+  .container{width:100%;max-width:100%;margin:0;padding:0 20px}
+
+  .topbar{background:#fff;border-bottom:1px solid var(--border)}
+  .topbar__inner{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;width:100%}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand__logo{width:40px;height:40px;border-radius:10px;background:var(--primary);color:#fff;display:grid;place-items:center;font-size:18px;font-weight:800}
+  .brand__logo-img{height:42px;width:auto;max-width:150px;object-fit:contain;display:block}
+  .brand__name{font-size:14px;margin:0}
+  .brand__sub{font-size:12px;color:var(--muted);margin:2px 0 0}
+  .pill{background:var(--accent);color:var(--primary);font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px}
+
+  .hero{background:linear-gradient(135deg,#3e392e 0%,#3e392e 100%);color:#fff;padding:36px 0}
+  .crumbs{font-size:12px;color:rgba(255,255,255,.75);margin-bottom:10px}
+  .crumbs a{color:rgba(255,255,255,.9);text-decoration:none}
+  .hero h1{font-size:28px;margin:0 0 6px}
+  .hero__lead{max-width:520px;color:rgba(255,255,255,.85);margin:0;font-size:14px}
+  .hero__stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+  @media(max-width:720px){.hero__stats{grid-template-columns:repeat(2,1fr)}}
+  .stat{background:rgb(255, 255, 255);border:1px solid rgb(0, 0, 0);border-radius:12px;padding:14px 16px;backdrop-filter:blur(4px)}
+  .stat__lbl{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:rgb(0, 0, 0)}
+  .stat__val{font-size:22px;font-weight:800;margin-top:4px;color:rgb(0, 0, 0)}
+
+  main{padding:32px 0 60px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .card__head{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+  .card__title{margin:0;font-size:16px;font-weight:800}
+  .topbar__inner{flex-wrap:wrap;gap:10px 16px}
+  @media(max-width:600px){.toolbar input,.toolbar select,.toolbar .btn{flex:1 1 100%;width:100%}}
+  .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .toolbar input,.toolbar select{font:inherit;border:1px solid var(--border);border-radius:10px;padding:8px 12px;outline:none;font-size:13px;background:#fff}
+  .toolbar input:focus,.toolbar select:focus{border-color:var(--primary-2);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+  .btn{font:inherit;font-weight:700;font-size:13px;padding:9px 16px;border-radius:10px;cursor:pointer;border:none;background:var(--primary);color:#fff;text-decoration:none;display:inline-block}
+  .btn:hover{background:var(--primary-2)}
+
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  .students-table{min-width:1450px}
+  .students-table th,.students-table td{white-space:nowrap}
+  .students-table .date-cell{min-width:110px;width:110px;white-space:nowrap}
+  thead th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:12px 20px;border-bottom:1px solid var(--border);font-weight:700}
+  tbody td{padding:14px 20px;border-bottom:1px solid #f1f2f6}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#fafbff}
+  .mono{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted)}
+  .name{font-weight:700;display:flex;align-items:center;gap:10px}
+  .avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--primary);display:grid;place-items:center;font-weight:800;font-size:12px}
+  .badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;display:inline-block}
+  .badge--ok{background:#d1fae5;color:var(--success)}
+  .badge--warn{background:#fef3c7;color:var(--warning)}
+  .link{color:var(--primary-2);text-decoration:none;font-weight:600;font-size:13px;margin-right:12px}
+  .link:hover{text-decoration:underline}
+  .link--danger{color:#b91c1c}
+
+  /* Toast popup */
+  .toast{
+    position:fixed;top:20px;right:20px;z-index:999;
+    background:var(--success);color:#fff;padding:14px 20px;border-radius:10px;
+    box-shadow:var(--shadow-lift);font-weight:700;font-size:13.5px;
+    display:flex;align-items:center;gap:10px;
+    transform:translateY(-16px);opacity:0;pointer-events:none;
+    transition:transform .25s ease,opacity .25s ease;
+  }
+  .toast.show{transform:translateY(0);opacity:1}
+  .toast.toast--danger{background:#b91c1c}
+  .toast .x{background:rgba(255,255,255,.2);border:0;color:#fff;border-radius:6px;padding:2px 8px;cursor:pointer;font-weight:700}
+  
+</style>
+<link rel="stylesheet" th:href="@{/css/responsive.css}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <div class="brand">
+        <img th:src="@{/images/ABiS.png}" alt="ABiS Logo" class="brand__logo-img">
+        <div>
+          <p class="brand__name">ABiS Student Management System</p>
+          <p class="brand__sub">View Student Details</p>
+        </div>
+      </div>
+      <span class="pill">Academic Year 2026–27</span>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Student Register</h1>
+      <p class="hero__lead">Complete list of enrolled students across all departments and domain.</p>
+      <div class="hero__stats">
+        <div class="stat"><div class="stat__lbl">Total</div><div class="stat__val" th:text="${totalStudents}">0</div></div>
+        <div class="stat"><div class="stat__lbl">Fees Paid</div><div class="stat__val" th:text="${paidCount}">0</div></div>
+        <div class="stat"><div class="stat__lbl">Fees Unpaid</div><div class="stat__val" th:text="${unpaidCount}">0</div></div>
+        <div class="stat"><div class="stat__lbl">Domain</div><div class="stat__val" th:text="${domains.size()}">0</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div id="toast" class="toast">
+    <span id="toastMsg"></span>
+    <button class="x" onclick="document.getElementById('toast').classList.remove('show')">✕</button>
+  </div>
+
+  <main>
+    <div class="container">
+      <div class="card">
+        <div class="card__head">
+          <h2 class="card__title">All Students</h2>
+          <form class="toolbar" method="get" th:action="@{/students}">
+            <input id="q" name="q" type="text" placeholder="Filter by name, ID, course, domain…" />
+            <select id="course" name="course" onchange="this.form.submit()">
+              <option value="">All courses</option>
+              <option value="BCA">BCA</option><option value="BCS">BCS</option><option value="B.Sc">B.Sc</option>
+              <option value="MCA">MCA</option><option value="M.Sc">M.Sc</option>
+              <option value="B.Tech">B.Tech</option><option value="M.Tech">M.Tech</option>
+            </select>
+            <select id="fee" name="fee" onchange="this.form.submit()">
+              <option value="">All fees status</option>
+              <option value="PAID">Paid</option>
+              <option value="UNPAID">Unpaid</option>
+            </select>
+            <select id="domain" name="domain" onchange="this.form.submit()">
+              <option value="">All domains</option>
+              <option th:each="d : ${domains}" th:value="${d}" th:text="${d}"></option>
+            </select>
+            <button type="submit" class="btn">Search</button>
+            <a class="btn" th:href="@{${exportUrl}}">Export CSV</a>
+            <a class="btn" th:href="@{/add}">+ Add Student</a>
+          </form>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="students-table">
+            <thead>
+              <tr>
+                <th>ID</th><th>Name</th><th>Age</th><th>Course</th>
+                <th>Domain</th><th>Work Mode</th><th>Contact</th><th>Fees Status</th>
+                <th>Status</th><th>Action</th>
+              </tr>
+            </thead>
+			<tbody id="studentsBody">
+
+			<tr th:each="student : ${students}"
+			    th:attr="data-row=${student.id},data-id=${student.id},data-name=${#strings.toLowerCase(student.name)},data-course=${student.course},data-domain=${student.domain},data-fee=${student.feeStatus}">
+
+			    <td th:text="${student.id}"></td>
+
+			    <td>
+			        <div class="name">
+			            <span class="avatar"
+			                  th:text="${#strings.substring(student.name,0,1)}">
+			            </span>
+
+			            <span th:text="${student.name}"></span>
+			        </div>
+			    </td>
+
+			    <td th:text="${student.age}"></td>
+
+			    <td th:text="${student.course}"></td>
+
+			    <td th:text="${student.domain}"></td>
+
+			    <td th:text="${student.workMode != null and student.workMode != ''} ? ${student.workMode} : '-'"></td>
+
+
+
+			    <td>
+
+			        <div th:text="${student.email}"></div>
+
+			        <div class="mono"
+			             th:text="${student.phone}">
+			        </div>
+
+			    </td>
+
+
+
+			    <td>
+
+			        <span class="badge"
+			              th:classappend="${student.feeStatus == 'PAID'} ? ' badge--ok' : ' badge--warn'"
+			              th:text="${student.feeStatus}">UNPAID</span>
+
+			        <div th:if="${student.remainingDue > 0}"
+			             style="font-size:12px;font-weight:600;color:#b91c1c;margin-top:4px"
+			             th:text="'Due: ₹' + ${#numbers.formatDecimal(student.remainingDue, 1, 'COMMA', 2, 'POINT')}"></div>
+
+			    </td>
+
+			    <td>
+
+			        <span class="badge badge--ok">Active</span>
+
+			    </td>
+
+			    <td>
+
+			        <a th:href="@{/view/{id}(id=${student.id})}"
+			           class="link">
+			            View
+			        </a>
+
+			        <a th:href="@{/edit/{id}(id=${student.id})}"
+			           class="link">
+			            Edit
+			        </a>
+
+			        <a href="#" th:attr="data-id=${student.id}"
+			           class="link link--danger"
+			           onclick="return deleteStudent(this)">
+			            Delete
+			        </a>
+
+			    </td>
+
+			</tr>
+
+			<tr th:if="${#lists.isEmpty(students)}">
+
+			    <td colspan="10"
+			        style="text-align:center;padding:30px">
+
+			        No Students Found
+
+			    </td>
+
+			</tr>
+
+
+			</tbody>
+          </table>
+        </div>
+        <div th:replace="~{pager :: pager(${studentPage}, ${pagerBase})}"></div>
+      </div>
+    </div>
+  </main>
+
+<div th:replace="~{delete-form :: deleteForm}"></div>
+<div th:replace="~{footer :: siteFooter}"></div>
+
+  
+  <script>
+    // Show the current filter values in the toolbar (the list itself is filtered by the server)
+    (function(){
+      var params = new URLSearchParams(window.location.search);
+      ['q', 'course', 'domain', 'fee'].forEach(function(name){
+        var el = document.getElementById(name);
+        if (el && params.get(name) !== null) el.value = params.get(name);
+      });
+    })();
+
+    // ---- Success popup after add / edit / delete ----
+    function showToast(message, isDanger){
+      var toast = document.getElementById('toast');
+      var msgEl = document.getElementById('toastMsg');
+      if (!toast || !msgEl) return;
+      msgEl.textContent = message;
+      toast.classList.toggle('toast--danger', !!isDanger);
+      toast.classList.add('show');
+      setTimeout(function(){ toast.classList.remove('show'); }, 3500);
+    }
+
+    (function(){
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('added') === 'true') {
+        showToast('✅ Student added successfully!');
+      } else if (params.get('updated') === 'true') {
+        showToast('✏️ Student updated successfully!');
+      } else if (params.get('deleted') === 'true') {
+        showToast('🗑️ Student deleted successfully!', true);
+      }
+      if (params.has('added') || params.has('updated') || params.has('deleted')) {
+        var url = new URL(window.location);
+        url.searchParams.delete('added');
+        url.searchParams.delete('updated');
+        url.searchParams.delete('deleted');
+        window.history.replaceState({}, '', url);
+      }
+    })();
+
+  </script>
+
+</body>
+</html>

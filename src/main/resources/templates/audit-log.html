@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Audit Log · ABiS Student Management System</title>
+<link rel="icon" type="images/png" th:href="@{/images/ABiS.png}">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<style>
+  .topbar__links{display:flex;align-items:center;flex-wrap:wrap;gap:8px 18px}
+  .topbar__link{color:#1e3a8a;font-weight:600;text-decoration:none;font-size:15px;white-space:nowrap}
+  .topbar__inner{flex-wrap:wrap;gap:10px 16px}
+  .crumbs{font-size:12px;color:rgba(255,255,255,.75);margin-bottom:10px}
+  .crumbs a{color:rgba(255,255,255,.9);text-decoration:none}
+  .hero h1{font-size:28px;margin:0 0 6px}
+  .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .toolbar input,.toolbar select{font:inherit;border:1px solid var(--border);border-radius:10px;padding:8px 12px;outline:none;font-size:13px;background:#fff}
+  .toolbar input:focus,.toolbar select:focus{border-color:var(--primary-2);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+  .btn{font:inherit;font-weight:700;font-size:13px;padding:9px 16px;border-radius:10px;cursor:pointer;border:none;background:var(--primary);color:#fff;text-decoration:none;display:inline-block}
+  .btn:hover{background:var(--primary-2)}
+  .btn--ghost{background:#eef2ff;color:var(--primary)}
+  .btn--ghost:hover{background:#dbe4ff}
+  .audit-table{min-width:1000px}
+  .audit-table th,.audit-table td{text-align:left;vertical-align:top}
+  .audit-table th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:12px 16px;border-bottom:1px solid var(--border);font-weight:700;white-space:nowrap}
+  .audit-table td{padding:12px 16px;border-bottom:1px solid #f1f2f6;font-size:13.5px}
+  .audit-table td.when{white-space:nowrap}
+  .audit-table td.details{max-width:520px;word-break:break-word}
+  .act{font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;display:inline-block;white-space:nowrap;background:#eef2ff;color:#1e3a8a}
+  .act-LOGIN_SUCCESS{background:#d1fae5;color:#059669}
+  .act-LOGIN_FAILED{background:#fee2e2;color:#b91c1c}
+  .act-LOGOUT{background:#f3f4f6;color:#4b5563}
+  .act-STUDENT_CREATED,.act-STUDENT_REGISTERED{background:#e0f2fe;color:#0369a1}
+  .act-STUDENT_UPDATED{background:#fef3c7;color:#b45309}
+  .act-STUDENT_DELETED{background:#fee2e2;color:#b91c1c}
+  .pager{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 20px;font-size:13px;color:var(--muted)}
+  .pager__links{display:flex;gap:8px}
+  .empty{text-align:center;padding:28px;color:var(--muted)}
+  main.audit-main{padding:32px 20px 60px}
+  .act-STUDENT_APPROVED{background:#d1fae5;color:#059669}
+  .act-STUDENT_REJECTED{background:#fee2e2;color:#b91c1c}
+</style>
+<link rel="stylesheet" th:href="@{/css/responsive.css}">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <div class="brand">
+      <img th:src="@{/images/ABiS.png}" alt="ABiS Logo" class="brand__logo-img">
+      <div>
+        <p class="brand__name">ABiS Student Management System</p>
+        <p class="brand__sub">Audit Log</p>
+      </div>
+    </div>
+    <div class="topbar__links">
+      <a th:href="@{/}" class="topbar__link">🏠 Dashboard</a>
+	<form th:action="@{/logout}" method="post" style="display:inline">
+    	<input type="hidden" name="_csrf" th:value="${session.csrfToken}">
+    	<button type="submit" class="topbar__link"	
+            style="background:none;border:none;cursor:pointer;font:inherit;">🚪 Logout</button>
+	</form>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h1>Audit Log</h1>
+    <p class="hero__lead">A permanent record of who logged in and who added, changed or deleted student records.</p>
+  </div>
+</section>
+
+<main class="audit-main">
+  <div class="container">
+    <div class="card">
+
+      <div class="card__head">
+        <h2 style="margin:0;font-size:16px">
+          Activity <span style="color:var(--muted);font-weight:500;font-size:13px"
+                         th:text="'(' + ${logs.totalElements} + ' entries)'"></span>
+        </h2>
+
+        <form th:action="@{/audit}" method="get" class="toolbar">
+          <select name="action">
+            <option value="">All actions</option>
+            <option th:each="a : ${actions}" th:value="${a}" th:text="${a}"
+                    th:selected="${a == selectedAction}"></option>
+          </select>
+          <input type="text" name="q" th:value="${q}" placeholder="Search user, student, ID or details…">
+          <button type="submit" class="btn">Filter</button>
+          <a th:href="@{/audit}" class="btn btn--ghost">Refresh</a>
+        </form>
+      </div>
+
+      <div class="table-wrap" style="overflow-x:auto">
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>When</th>
+              <th>Who</th>
+              <th>Action</th>
+              <th>Target</th>
+              <th>Details</th>
+              <th>IP address</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="entry : ${logs.content}">
+              <td class="when" th:text="${#temporals.format(entry.createdAt, 'dd MMM yyyy, HH:mm:ss')}"></td>
+              <td th:text="${entry.actor}"></td>
+              <td><span class="act" th:classappend="'act-' + ${entry.action}" th:text="${entry.action}"></span></td>
+              <td>
+                <span th:if="${entry.targetType != null}"
+                      th:text="${entry.targetType} + (${entry.targetId != null} ? ' #' + ${entry.targetId} : '')"></span>
+              </td>
+              <td class="details" th:text="${entry.details}"></td>
+              <td class="mono" th:text="${entry.ipAddress}"></td>
+            </tr>
+            <tr th:if="${logs.empty}">
+              <td colspan="6" class="empty">No audit entries found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pager" th:if="${logs.totalPages > 1}">
+        <span th:text="'Page ' + ${logs.number + 1} + ' of ' + ${logs.totalPages}"></span>
+        <span class="pager__links">
+          <a class="btn btn--ghost" th:if="${logs.hasPrevious()}"
+             th:href="@{/audit(page=${logs.number - 1}, action=${selectedAction}, q=${q})}">← Newer</a>
+          <a class="btn btn--ghost" th:if="${logs.hasNext()}"
+             th:href="@{/audit(page=${logs.number + 1}, action=${selectedAction}, q=${q})}">Older →</a>
+        </span>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<div th:replace="~{footer :: siteFooter}"></div>
+
+</body>
+</html>
