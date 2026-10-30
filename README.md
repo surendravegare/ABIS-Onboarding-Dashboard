@@ -1,5 +1,7 @@
 # ABIS Onboarding Dashboard
 
+🚀 **Live Demo:** [Open Application](https://abis.tailc8afbb.ts.net/welcome)
+
 A Java Full Stack onboarding and student management application built using Spring Boot, Thymeleaf, MySQL, and Maven. Includes admin authentication, student registration, approval workflows, and audit logging.
 
 ## Run it
